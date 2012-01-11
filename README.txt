@@ -37,12 +37,12 @@ rails generate scaffold PersonCompany person:references company:references
 
 class Person < ActiveRecord::Base
 	has_many :person_companies
-	has_many :companies :through => person_companies
+	has_many :companies, :through => :person_companies
 end
 
 class Company < ActiveRecord::Base
 	has_many :person_companies
-	has_many :people :through => person_companies
+	has_many :people, :through => :person_companies
 end
 
 class PersonCompany < ActiveRecord::Base
