@@ -50,7 +50,7 @@ class PersonCompany < ActiveRecord::Base
 	belongs_to :company
 end
 
-Soon , if you run rmodel as below in the root of a rails application directory
+if you run rmodel as below in the root of a rails application directory
 
 	./rmodel.rb -g -f employment.yml
 
