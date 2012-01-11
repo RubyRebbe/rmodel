@@ -1,0 +1,9 @@
+--- 
+Post: 
+  title: string
+  description: text
+  
+Comment: 
+  email: string
+  post:  references
+

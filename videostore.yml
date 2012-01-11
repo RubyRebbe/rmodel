@@ -1,0 +1,17 @@
+--- 
+Person: 
+  name: string
+  email: string
+  store: through
+  item: through
+
+Item:
+  name: string
+  description: text
+  store: through
+
+Store: 
+  name: string
+  description: text
+  person: references
+

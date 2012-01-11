@@ -1,0 +1,38 @@
+--- 
+Person: 
+  name: string
+  company: through
+  
+Company: 
+  name: string
+
+-------------------------------------------- should yield ----------------------
+
+scaffolding:
+
+	rails generate scaffold Person name:string
+
+	rails generate scaffold Company name:string
+
+	rails generate scaffold PersonCompany person:references company:references
+
+classes:
+
+	class Person < ActiveRecord::Base
+		has_many :person_companies
+		has_many :companies :through => :person_companies
+	end
+
+	class Company < ActiveRecord::Base
+		has_many :person_companies
+		has_many :people :through => :person_companies
+	end
+
+	class PersonCompany < ActiveRecord::Base
+		belongs_to :person
+		belongs_to :company
+	end
+
+
+
+
