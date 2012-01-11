@@ -60,14 +60,14 @@ class Through < Relation
 	def from_stuff
 		[
 			"\thas_many :" + join_name,
-			"\thas_many :" + to.name.downcase.pluralize + " :through => " + join_name
+			"\thas_many :" + to.name.downcase.pluralize + ", :through => :" + join_name
 		]
 	end
 
 	def to_stuff
 		[
 			"\thas_many :" + join_name,
-			"\thas_many :" + from.name.downcase.pluralize + " :through => " + join_name
+			"\thas_many :" + from.name.downcase.pluralize + ", :through => :" + join_name
 		]
 	end
 	
