@@ -74,6 +74,15 @@ class Model
 		#self.classes.to_a.map { |p| p[1] }.reduce([]) { |sum,k| sum + k.find_through( self) }
 		classes.reduce([]) { |s,p| s + p[1].find_through(self) }
 	end
+
+	def valid?
+		classes.all? { |p| p[1].valid? }
+	end
+
+	# pre-condition: !valid?
+	def error
+		classes.find_all { |p| p[1].error != nil }.first[1].error
+	end
 end # class Model
 
 

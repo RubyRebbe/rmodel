@@ -35,6 +35,7 @@ class RailsModelFactory
 		"no argument:  gets you this help listing",
 		"-f : load model file .yml [default is model.yml]",
 		"-t : a list of the names of the model objects",
+		"-v : validates the attribute types",
 		"-n : shows you what will be generated, both scaffolding and rails model files",
 		"-g : creates the rails app via rails scaffold and rails model files"
 	]
@@ -44,7 +45,7 @@ class RailsModelFactory
 		if ARGV.length == 0 then
 			help.each { |s| puts s }
 		else
-			options = "tf:ng"
+			options = "tf:ngv"
 			opt = Getopt::Std.getopts( options)
 
 			# load the .yml model, one way or t'other
@@ -56,6 +57,15 @@ class RailsModelFactory
 			
 			if opt["t"] then
 				self.model.classes.each { |kname,k| puts kname }		
+			end
+
+			if opt["v"] then # validate the model
+				if self.model.valid? then
+					puts "The model is valid"
+				else
+					puts "The model is not valid"
+					puts "Here is the offending klass and attribute: " + model.error
+				end
 			end
 
 			if opt["n"] then

@@ -4,11 +4,12 @@ require "attribute.rb"
 
 class Klass
 	include Railable
-	attr_accessor :name, :attributes
+	attr_accessor :name, :attributes, :error
 
 	def initialize( name = nil)
 		@name = name
 		@attributes = {} # hash of Attribute objects by name
+		@error = nil
 	end
 
 	def add_attribute( name, typus)
@@ -82,5 +83,13 @@ class Klass
 		attributes.find_all { |p| p[1].typus == "through" }.map { |p|
 			Through.new( self, model.classes[p[0].capitalize])
 		}
+	end
+
+	def valid?
+		b = self.attributes.all? { |p| p[1].valid? }
+		if b == false then
+			@error = self.attributes.find_all { |p| !p[1].valid? }.first[1].error( self.name)
+		end
+		b
 	end
 end # class Klass

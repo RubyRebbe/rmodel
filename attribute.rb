@@ -21,7 +21,8 @@ class Attribute
 		"date",
 		"binary",
 		"boolean",
-		"references" # hmmm ... is this really necessary?
+		"references",
+		"through"
 	]
 	end
 
@@ -33,7 +34,15 @@ class Attribute
 		@typus == "through" ? "" : ( @name + ":" + @typus )
 	end
 
+	def to_s
+ 		@name + ":" + @typus
+	end
+
 	def to_hash
 		{ @name => @typus }
+	end
+
+	def error(klassname)
+		klassname + " " + self.to_s
 	end
 end # class Attribute
