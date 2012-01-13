@@ -86,9 +86,9 @@ class Klass
 	end
 
 	def valid?
-		b = self.attributes.all? { |p| p[1].valid? }
+		b = self.attributes.all? { |p| p[1].valid_db_type? }
 		if b == false then
-			@error = self.attributes.find_all { |p| !p[1].valid? }.first[1].error( self.name)
+			@error = self.attributes.find_all { |p| !p[1].valid_db_type? }.first[1].error( self.name)
 		end
 		b
 	end

@@ -8,7 +8,7 @@ class Attribute
 		@name, @typus = name, typus
 	end
 
-	def self.types
+	def self.types # rails db types
 	[
 		"string",
 		"text",
@@ -22,12 +22,16 @@ class Attribute
 		"binary",
 		"boolean",
 		"references",
-		"through"
+		"through"		# not a rails db type, but an rmodel type
 	]
 	end
 
-	def valid?
+	def valid_db_type?
 		Attribute.types.index( @typus) != nil
+	end
+
+	def valid_model_type?(model)
+		model.classes.key?( @typus)
 	end
 
 	def to_scaffold

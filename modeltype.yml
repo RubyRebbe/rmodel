@@ -1,0 +1,21 @@
+---
+
+App:
+  name: string
+  description: text
+
+Klass: 
+  name: string
+  description: text
+  app: references
+
+Attribute:
+  name: string
+  description: text
+  typus: string
+  klass: references
+
+Belong:
+  from: Klass
+  to:  Klass
+

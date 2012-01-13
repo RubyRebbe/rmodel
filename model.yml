@@ -1,0 +1,8 @@
+--- 
+Person: 
+  name: string
+  company: through
+  
+Company: 
+  name: string
+
