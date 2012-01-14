@@ -34,7 +34,7 @@ class Model
 
 	# return array of strings, each string is a rails generate scaffold ... per model class
 	def to_scaffold
-		@classes.map { |klassname,klass| klass.to_scaffold }
+		@classes.map { |klassname,klass| klass.to_scaffold( self) }
 	end
 
 	# returns a hash representation of the model

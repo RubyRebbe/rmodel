@@ -17,9 +17,9 @@ class Klass
 		attributes[name] = a
 	end
 
-	def to_scaffold
+	def to_scaffold( model = nil )
 		prefix = "rails generate scaffold " + @name
-		@attributes.reduce( prefix) { |s,p| s + " " + p[1].to_scaffold }.strip
+		@attributes.reduce( prefix) { |s,p| s + " " + p[1].to_scaffold( model) }.strip
 	end
 
 	# string containing rails model representation of this klass
@@ -30,10 +30,26 @@ class Klass
 
 		# handle belongs_to and has_many
 		if model != nil then
-			slist = [ prefix ] + belongs_to( model) + has_many( model) + through(model) + [ suffix ]
+			slist = [ prefix ] + 
+				belongs_to( model) + 
+				has_many( model) + 
+				through(model) +
+				has_a( model) +
+				[ suffix ]
 		end
 
 		slist.reduce( "") { |sum,v| sum + "\n" + v }
+	end
+
+	def has_a( model)
+		l = attributes.find_all { |p| p[1].valid_model_type?(model) }.map { |p| p[1] }
+		l.map { |a|
+			belongs_to = "\tbelongs_to :#{a.name}, "
+			class_name = ":class_name => \"#{a.typus}\", "
+			foreign_key = ":foreign_key => \"#{a.name}_id\""
+
+			belongs_to + class_name + foreign_key
+		}
 	end
 
 	def through( model)

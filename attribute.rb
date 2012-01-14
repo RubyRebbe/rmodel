@@ -34,8 +34,16 @@ class Attribute
 		model.classes.key?( @typus)
 	end
 
-	def to_scaffold
-		@typus == "through" ? "" : ( @name + ":" + @typus )
+	def to_scaffold( model = nil)
+		r = ""
+		if model == nil then
+			r = ( @typus == "through" ) ? "" : ( @name + ":" + @typus )
+		elsif valid_model_type?( model) then
+			r = @name + ":" + "references"
+		else
+			r = ( @typus == "through" ) ? "" : ( @name + ":" + @typus )
+		end
+		r
 	end
 
 	def to_s

@@ -1,0 +1,62 @@
+---
+App:
+  name: string
+  description: text
+
+Klass: 
+  name: string
+  description: text
+  app: references
+
+Attribute:
+  name: string
+  description: text
+  typus: string
+  klass: references
+
+Belong:
+  from: Klass # belongs_to :from, :class_name => "Klass", :foreign_key => "from_id"
+  to:  Klass  # belongs_to :to, :class_name => "Klass", :foreign_key => "to_id"
+
+----------------------------------------------
+
+parser:
+	for each klass in model
+		generate klass.to_scaffold
+		generate klass.to_class (string which represents rails model class)
+
+klass.to_scaffold
+	prefix = "rails generate scaffold " + klass.name
+	contribution of each attribute
+		if attribute.typus is db_type
+			attribute.name + ":" + attribute.typue
+		if attribute.typus is a model type
+			attribute.name + ":" + "references"
+
+klass.to_class:
+	[ prefix ] + 
+	belongs_to( model) + 
+	has_many( model) + 
+	through(model) + 
+	has_a( model)
+	[ suffix ]
+
+klass.has_a:
+	for each attribute
+		if attribute.typus is db_type
+			do the stuff you already do
+		if attribute.typus is a model type
+			belongs_to = "\tbelongs_to #{attribute.name}, "
+			class_name = ":class_name => \"#{attribute.typus}\", "
+			foreign_key = ":foreign_key => \"#{attribute.name}_id\""
+			generate belongs_to + class_name + foreign_key
+			
+	
+
+			
+			
+
+
+
+
+

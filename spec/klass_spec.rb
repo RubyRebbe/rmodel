@@ -1,5 +1,6 @@
 require "klass.rb"
 require "attribute.rb"
+require "model.rb"
 
 describe Klass do
 	before( :all) do
@@ -43,5 +44,44 @@ describe Klass do
 		klass = Klass.new
 		klass.from_hash h
 		klass.to_hash.should == h
+	end
+
+	describe "has_a capabilities" do
+		before( :all) do
+			@model = Model.new( Model.file_to_s( "modeltype.yml") )
+			@belong = @model.classes["Belong"]
+		end
+
+		it "can find all the attributes with model types" do
+			l = @belong.attributes.find_all { |p| p[1].valid_model_type?(@model) }.map { |p| p[1] }
+			l.inspect.should == "[from:Klass, to:Klass]"	
+		end
+
+		it "can generate the rails model code for these attributes" do
+			l = @belong.attributes.find_all { |p| p[1].valid_model_type?(@model) }.map { |p| p[1] }
+			puts l.map { |a|
+				belongs_to = "\tbelongs_to :#{a.name}, "
+				class_name = ":class_name => \"#{a.typus}\", "
+				foreign_key = ":foreign_key => \"#{a.name}_id\""
+
+				belongs_to + class_name + foreign_key
+			}.reduce( "") { |sum,e| sum + "\n" + e }
+		end
+
+		it "actual invocation of has_a()" do
+			puts @belong.has_a(@model)
+		end
+
+		it "can generate the class rep of Belong with has_a and everything else" do
+			puts @belong.to_class(@model)
+		end
+
+		it "can generate the proper scaffolding for Belong, given its has_a relationships" do
+			puts @belong.to_scaffold(@model)
+		end
+
+		it "can invert the has_a relationship" do
+			pending "design and implementation"
+		end
 	end
 end
