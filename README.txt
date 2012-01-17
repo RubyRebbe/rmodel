@@ -27,7 +27,7 @@ Company:
 
 If you run this rmodel command
 
-	./rmodel.rb -n -f employment.yml
+	rmodel -n -f employment.yml
 
 you will see in standard output
 
@@ -50,9 +50,53 @@ class PersonCompany < ActiveRecord::Base
 	belongs_to :company
 end
 
+Note that rmodel acts symmetrically:  if you specify a belongs_to relationship, rmodel will generate it and also its corresponding has_many relationship.
+
 if you run rmodel as below in the root of a rails application directory
 
-	./rmodel.rb -g -f employment.yml
+	rmodel -g -f employment.yml
 
 it will actually run the scaffold commands and ensure that the model files are as above in the directory app/models
+
+Rmodel extends the set of things that can be types for class attributes from the usual rails (scalar) database types (e.g. string, decimal, ...) to rails model objects.  Take a look at the following yaml specification of an object model:
+
+--- 
+Person: 
+  name: string
+
+Company: 
+  name: string
+
+Employment:
+  consulting:  Person
+  employment: Company
+  compensation:  decimal
+
+which models the notion that a person (a consultant) can work for multiple companies at the same time for different rates of compensation.
+
+For this model, rmodel generates the following scaffolding
+
+rails generate scaffold Person name:string
+rails generate scaffold Employment consulting:references employment:references compensation:decimal
+rails generate scaffold Company name:string
+
+and the following rails model classes:
+
+class Person < ActiveRecord::Base
+	has_many :consultings, :class_name => "Employment", :foreign_key => "consulting_id"
+end
+
+class Employment < ActiveRecord::Base
+	belongs_to :consulting, :class_name => "Person", :foreign_key => "consulting_id"
+	belongs_to :employment, :class_name => "Company", :foreign_key => "employment_id"
+end
+
+class Company < ActiveRecord::Base
+	has_many :employments, :class_name => "Employment", :foreign_key => "employment_id"
+end
+
+Here to, rmodel acts symmetrically to generate both the belongs_to and its corresponding has_many relationship.
+
+
+
 

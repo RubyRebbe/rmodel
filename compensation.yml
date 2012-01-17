@@ -1,0 +1,11 @@
+--- 
+Person: 
+  name: string
+
+Company: 
+  name: string
+
+Employment:
+  consulting:  Person
+  employment: Company
+  compensation:  decimal
