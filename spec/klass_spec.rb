@@ -50,6 +50,7 @@ describe Klass do
 		before( :all) do
 			@model = Model.new( Model.file_to_s( "modeltype.yml") )
 			@belong = @model.classes["Belong"]
+			@klass = @model.classes["Klass"]
 		end
 
 		it "can find all the attributes with model types" do
@@ -80,8 +81,26 @@ describe Klass do
 			puts @belong.to_scaffold(@model)
 		end
 
-		it "can invert the has_a relationship" do
-			pending "design and implementation"
+		it "can calculate all the model objects (Belong) which refer to (has_a) Klass" do
+			pair = @klass.find_has_a_inverse( @model).first
+			pair[0].should == @belong
 		end
-	end
+
+		it "for a model object which refers to Klass, it calculates which attributes do so" do
+			pair = @klass.find_has_a_inverse( @model).first
+			attributes = pair[1]
+			attributes.length.should == 2
+			attributes.map {|e| e[0] }.should == [ "from", "to" ]
+		end
+
+		it "for Klass, calculate the contribution of has_many_inverse" do
+			l = @klass.has_a_inverse( @model)
+			puts l.inspect
+			l.count.should == 2
+		end
+
+		it "can generate the rails class string rep for Klass" do
+			puts @klass.to_class( @model)
+		end
+	end # describe has_a capabilities
 end

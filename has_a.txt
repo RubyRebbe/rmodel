@@ -1,0 +1,32 @@
+# how do we invert the has_a relationship?
+
+Belong:
+  from: Klass
+  to:  Klass
+
+yields =>
+
+class Belong < ActiveRecord::Base
+	belongs_to :from, :class_name => "Klass", :foreign_key => "from_id"
+	belongs_to :to, :class_name => "Klass", :foreign_key => "to_id"
+end
+
+to invert it means:
+	Klass has_many Belong via from
+	Klass has_many Belong via to
+
+hypothesize and test: ... got it to work, need regular rspec regression test to believe it
+
+class Klass < ActiveRecord::Base
+	has_many :froms, :class_name => "Belong", :foreign_key => "from_id"
+	has_many :tos, :class_name => "Belong", :foreign_key => "to_id"
+end
+
+froms = from.pluralize
+tos = to.pluralize
+
+Klass.has_a_inverse( model) inverts the has_a method
+
+To add this in,
+	* no change to scaffolding
+	* changes to rails model class body

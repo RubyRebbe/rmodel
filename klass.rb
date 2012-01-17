@@ -35,6 +35,7 @@ class Klass
 				has_many( model) + 
 				through(model) +
 				has_a( model) +
+				has_a_inverse( model) +
 				[ suffix ]
 		end
 
@@ -50,6 +51,28 @@ class Klass
 
 			belongs_to + class_name + foreign_key
 		}
+	end
+
+	def has_a_inverse( model)
+		find_has_a_inverse( model).map { |p|
+			klass = p[0]
+			attnames = p[1].map { |e| e[0] }
+
+			attnames.map { |aname|
+				has_many = "\thas_many :#{aname.pluralize}, "
+				class_name = ":class_name => \"#{klass.name}\", "
+				foreign_key = ":foreign_key => \"#{aname}_id\""
+
+				has_many + class_name + foreign_key
+			}
+		}.flatten
+	end
+
+	def find_has_a_inverse( model)
+		# find all the klass, attribute pairs that have me as Klass attribute
+		model.classes.map { |klassname, klass|
+			[ klass, klass.attributes.find_all { |aname, a| (a.typus == self.name) } ]
+		}.find_all { |p| !p[1].empty? }
 	end
 
 	def through( model)
